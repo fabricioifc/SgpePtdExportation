@@ -1,0 +1,33 @@
+<% plano = od.plans.order(versao: :desc).first unless od.plans.empty? %>
+<tr>
+  <td><%= od.grid_discipline.discipline.decorate.title %></td>
+  <% if od.user.nil? %>
+    <td><span class="label label-danger label-block" style="font-size: 14px;">Não possui</span></td>
+  <% else %>
+    <td><%= od.user.name %></td>
+  <% end %>
+  <% if plano.nil? %>
+    <td><span class="label label-danger label-block" style="font-size: 14px;">Não possui</span></td>
+  <% else %>
+    <td><%= plano.decorate.situacao 'label-block' %></td>
+  <% end %>
+
+  <% if !plano.nil? %>
+    <td><%= plano.decorate.link_show 'btn-xs btn-block' %></td>
+    <td><%= plano.decorate.link_pdf 'btn-xs btn-block' %></td>
+  <% else %>
+    <td class="well"></td>
+    <td class="well"></td>
+  <% end %>
+  <% if !od.user.nil? && (plano.nil? || (!plano.nil? && !plano.user.nil? && !plano.aprovado? && (!plano.analise? || plano.reprovado?))) %>
+    <td>
+      <%= link_to coor_enviar_aviso_plano_pendente_path(offer_discipline_id: od), class: "btn btn-warning btn-xs btn-block",
+          remote:true, id: "avisar_professor_#{od.id}" do %>
+          <i class="fa fa-send"></i>
+          Avisar professor
+      <% end %>
+    </td>
+  <% else %>
+  <td class="well"></td>
+  <% end %>
+</tr>

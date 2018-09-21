@@ -1,0 +1,36 @@
+<% if !offer.offer_disciplines.empty? %>
+  <% first = 0 %>
+  <!-- < por_grupo = offer.offer_disciplines.count >= 3 ? offer.offer_disciplines.count / 1 : 1 %>
+  < ofertas = offer.offer_disciplines.in_groups_of(por_grupo, false) %> -->
+
+  <!-- < ofertas.each do |a| %> -->
+      <div class="table-responsive">
+        <table class='table table-striped table-bordered'>
+          <thead>
+            <tr>
+              <th>Componente curricular</th>
+              <th class="text-center" style="width: 8%;">C.H.</th>
+              <th class="text-center" title="Atividade Não Presencial">(%) ANP máximo</th>
+              <th colspan="2">
+                Professor
+                <span class="pull-right text-primary" 
+                  id="add-second-teacher" style="cursor: pointer;"
+                  data-show="<%= params[:has_second_user] %>"
+                >
+                  <i class="fa fa-plus" aria-hidden="true"></i>
+                  Segundo Professor
+                </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- <= f.fields_for :offer_disciplines, offer.offer_disciplines[first, por_grupo] do |b| %> -->
+            <%= f.fields_for :offer_disciplines do |b| %>
+              <%= render partial: 'offer_discipline_item', locals: {g: b, offer: offer} %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <!-- < first = first + a.count %> -->
+  <!-- < end %> -->
+<% end %>

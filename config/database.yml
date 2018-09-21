@@ -1,0 +1,35 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: localhost
+  username: postgres
+  password: postgres
+
+development:
+  <<: *default
+  database: <%= ENV['DEV_SGPE_DATABASE_NAME'] %>
+  host:     <%= ENV['DEV_SGPE_DATABASE_HOST'] %>
+  username: <%= ENV['DEV_SGPE_DATABASE_USERNAME'] %>
+  password: <%= ENV['DEV_SGPE_DATABASE_PASSWORD'] %>
+
+test:
+  <<: *default
+  database: <%= ENV['TST_SGPE_DATABASE_NAME'] %>
+  host:     <%= ENV['TST_SGPE_DATABASE_HOST'] %>
+  username: <%= ENV['TST_SGPE_DATABASE_USERNAME'] %>
+  password: <%= ENV['TST_SGPE_DATABASE_PASSWORD'] %>
+
+staging:
+  <<: *default
+  database: <%= ENV['STG_SGPE_DATABASE_NAME'] %>
+  host:     <%= ENV['STG_SGPE_DATABASE_HOST'] %>
+  username: <%= ENV['STG_SGPE_DATABASE_USERNAME'] %>
+  password: <%= ENV['STG_SGPE_DATABASE_PASSWORD'] %>
+
+production:
+  <<: *default
+  database: <%= ENV['PRD_SGPE_DATABASE_NAME'] %>
+  host:     <%= ENV['PRD_SGPE_DATABASE_HOST'] %>
+  username: <%= ENV['PRD_SGPE_DATABASE_USERNAME'] %>
+  password: <%= ENV['PRD_SGPE_DATABASE_PASSWORD'] %>

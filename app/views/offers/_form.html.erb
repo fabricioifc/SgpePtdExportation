@@ -1,0 +1,63 @@
+<%= bootstrap_form_for(offer, local:true, label_errors: true, inline_errors: true, html: { class: "", role: "form" }) do |f| %>
+  <%= error_messages_for(offer) %>
+  <%= hidden_field_tag :grid_alterando, false %>
+
+    <div class="row">
+      <div class="form-group">
+        <div class="form-group col-md-4">
+          <%= f.label :grid_id %>
+          <%= select_tag :grid_id, options_for_select(@grades.collect { |c| ["#{c.course.name} - #{c.year}", c.id ]}, params[:grid_id]),
+            data: { remote: true, url: load_grid_offers_path, method: :patch },
+            id: :grid_id, class: 'form-control', prompt:'Selecione a grade', required:true, autofocus:true %>
+          <!-- <= select_tag :grid_id, options_for_select(@grades.collect { |c| ["#{c[4]} - #{c[3]} (Ano/semestre: #{c[1]}/#{c[2]})", "#{c[0]}" ]}, params[:grid_id]),
+            data: { remote: true, url: load_grid_offers_path, method: :patch },
+            id: :grid_id, class: 'form-control', prompt:'Selecione a grade', required:true %> -->
+        </div>
+        <div class="form-group col-md-2" id="grid_ano_semestre_partial">
+          <%= render partial: 'grid_ano_semestre', locals: {} %>
+        </div>
+        <div class="form-group col-md-3">
+          <%= f.text_field :dtprevisao_entrega_plano, 
+              value: (@offer.dtprevisao_entrega_plano.strftime('%d/%m/%Y') unless @offer.dtprevisao_entrega_plano.nil?),
+              :data => {:provider => 'datepicker'}, autocomplete: 'off' %>
+        </div>
+        <div class="form-group col-md-3">
+          <%= f.label :active %>
+          <%= f.check_box :active, id: :offer_active %>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="row">
+
+      <div class="col-md-3">
+        <%= f.select :type_offer, Offer.offer_types.collect { |c| [c.last, c.first] }, {id: :type_offer, prompt: true} %>
+      </div>
+      <div class="col-md-3">
+        <%= f.text_field :turma, id: :offer_turma, placeholder: 'Ex: 2018.A', label: "<span title='Ex: 2018.A'>Turma <i class='fa fa-info-circle'></i></span>".html_safe %>
+        <!-- <= f.select :turma_id, Turma.where(active:true).collect { |c| ["#{c.year} - #{c.name}", c.id] },
+          { prompt:true, id: :offer_turma_id },{ class: '' } %> -->
+      </div>
+      <div class="col-md-3">
+        <%= f.number_field :year, id: :offer_year, placeholder:true %>
+      </div>
+      <div class="col-md-3">
+        <% if !f.object.nil? && !f.object.grid.nil? && !f.object.grid.course.course_offer.description.eql?("semestral") %>
+          <%= f.number_field :semestre, id: :offer_semestre, placeholder:'1,2,3...', disabled:true %>
+        <% else %>
+          <%= f.number_field :semestre, id: :offer_semestre, placeholder:'1,2,3...' %>
+        <% end %>
+      </div>
+
+    </div>
+
+  <div id="grid_disciplines_partial">
+    <%= render partial: 'grid_disciplines_teacher', locals: {f: f, offer: offer} %>
+  </div>
+
+  <div class="fixed-on-bottom">
+    <%= f.submit class: "btn btn-sm btn-primary" %>
+  </div>
+
+<% end %>
